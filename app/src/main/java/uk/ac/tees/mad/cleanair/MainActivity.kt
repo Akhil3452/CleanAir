@@ -11,6 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import uk.ac.tees.mad.cleanair.ui.screens.splash.SplashScreen
 import uk.ac.tees.mad.cleanair.ui.theme.CleanAirTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,29 +24,18 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CleanAirTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                AppNavGraph()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    CleanAirTheme {
-        Greeting("Android")
+fun AppNavGraph(navController: NavHostController = rememberNavController()) {
+    NavHost(navController = navController, startDestination = "splash") {
+        composable("splash") { SplashScreen(navController = navController) }
+        //composable("auth") { AuthScreen(navController = navController) }
+        //composable("dashboard") { DashboardScreen(navController = navController) }
+        // other routes...
     }
 }
