@@ -27,7 +27,7 @@ import uk.ac.tees.mad.cleanair.R
 
 
 @Composable
-fun SplashScreen(navController: NavController, onTimeoutRoute: String = "auth") {
+fun SplashScreen(navController: NavController, onTimeoutRoute: String = "login") {
     val infinite = rememberInfiniteTransition()
     val cloudOffset1 = infinite.animateFloat(
         initialValue = -120f,
@@ -53,9 +53,9 @@ fun SplashScreen(navController: NavController, onTimeoutRoute: String = "auth") 
     LaunchedEffect(Unit) {
         startAnim = true
         delay(2000)
-//        navController.navigate(onTimeoutRoute) {
-//            popUpTo("splash") { inclusive = true }
-//        }
+        navController.navigate(onTimeoutRoute) {
+            popUpTo("splash") { inclusive = true }
+        }
     }
 
     Box(

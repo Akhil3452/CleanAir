@@ -15,6 +15,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import uk.ac.tees.mad.cleanair.ui.screens.auth.LoginScreen
+import uk.ac.tees.mad.cleanair.ui.screens.auth.SignupScreen
 import uk.ac.tees.mad.cleanair.ui.screens.splash.SplashScreen
 import uk.ac.tees.mad.cleanair.ui.theme.CleanAirTheme
 
@@ -34,7 +36,8 @@ class MainActivity : ComponentActivity() {
 fun AppNavGraph(navController: NavHostController = rememberNavController()) {
     NavHost(navController = navController, startDestination = "splash") {
         composable("splash") { SplashScreen(navController = navController) }
-        //composable("auth") { AuthScreen(navController = navController) }
+        composable("login") { LoginScreen(navController = navController) }
+        composable("signup") { SignupScreen(navController = navController) }
         //composable("dashboard") { DashboardScreen(navController = navController) }
         // other routes...
     }
