@@ -92,14 +92,6 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Checkbox(checked = rememberMe, onCheckedChange = { rememberMe = it })
-                    Text("Remember me", color = Neutral700)
-                }
-
                 AnimatedVisibility(showError) {
                     Text("Invalid credentials. Try again.", color = VeryUnhealthyRed)
                 }
