@@ -18,20 +18,33 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.delay
 import uk.ac.tees.mad.cleanair.ui.theme.*
 
 @Composable
 fun LoginScreen(
     navController: NavController,
-    onLoginClick: (String, String, Boolean) -> Unit = { _, _, _ -> }
+    viewModel: AuthViewModel = hiltViewModel()
 ) {
     AuthBackground {
         var email by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
         var passwordVisible by remember { mutableStateOf(false) }
-        var rememberMe by remember { mutableStateOf(false) }
+        var isLoading by remember { mutableStateOf(false) }
         var showError by remember { mutableStateOf(false) }
+        var errorMessage by remember { mutableStateOf<String?>(null) }
+
+
+        if (viewModel.authenticated.value) {
+            LaunchedEffect(Unit) {
+                delay(100)
+                navController.navigate("dashboard") {
+                    popUpTo("login") { inclusive = true }
+                }
+            }
+        }
 
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -43,7 +56,7 @@ fun LoginScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp)
                     .shadow(10.dp, RoundedCornerShape(24.dp))
-                    .background(White.copy(alpha = 0.9f), RoundedCornerShape(24.dp))
+                    .background(White.copy(alpha = 0.95f), RoundedCornerShape(24.dp))
                     .padding(24.dp)
             ) {
                 Text(
@@ -92,8 +105,8 @@ fun LoginScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                AnimatedVisibility(showError) {
-                    Text("Invalid credentials. Try again.", color = VeryUnhealthyRed)
+                AnimatedVisibility(errorMessage != null) {
+                    Text(errorMessage ?: "", color = VeryUnhealthyRed)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -101,10 +114,18 @@ fun LoginScreen(
                 Button(
                     onClick = {
                         if (email.isNotBlank() && password.isNotBlank()) {
-                            onLoginClick(email, password, rememberMe)
-                        } else {
-                            showError = true
-                        }
+                            isLoading = true
+                            viewModel.login(email, password) { success, msg ->
+                                isLoading = false
+                                if (success) {
+                                    navController.navigate("dashboard") {
+                                        popUpTo("login") { inclusive = true }
+                                    }
+                                } else {
+                                    errorMessage = msg ?: "Login failed. Try again."
+                                }
+                            }
+                        } else errorMessage = "Please fill all fields."
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = SkyBlue),
                     shape = RoundedCornerShape(20.dp),
@@ -112,7 +133,10 @@ fun LoginScreen(
                         .fillMaxWidth()
                         .height(50.dp)
                 ) {
-                    Text("Login", color = White)
+                    if (isLoading)
+                        CircularProgressIndicator(color = White, strokeWidth = 2.dp)
+                    else
+                        Text("Login", color = White)
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))

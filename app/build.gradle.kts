@@ -4,6 +4,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     kotlin("kapt")
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -46,6 +47,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0")
     implementation("androidx.navigation:navigation-compose:2.8.0")
     implementation("androidx.room:room-runtime:2.7.0-alpha05")
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
     kapt("androidx.room:room-compiler:2.7.0-alpha05")
     implementation("androidx.room:room-ktx:2.7.0-alpha05")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")

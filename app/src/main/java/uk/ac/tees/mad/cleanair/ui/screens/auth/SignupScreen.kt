@@ -1,13 +1,14 @@
 package uk.ac.tees.mad.cleanair.ui.screens.auth
 
-import androidx.compose.material.icons.outlined.Visibility
-import androidx.compose.material.icons.outlined.VisibilityOff
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,20 +17,32 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.delay
 import uk.ac.tees.mad.cleanair.ui.theme.*
 
 @Composable
 fun SignupScreen(
     navController: NavController,
-    onSignupClick: (String, String) -> Unit = { _, _ -> }
+    viewModel: AuthViewModel = hiltViewModel()
 ) {
     AuthBackground {
         var email by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
         var confirm by remember { mutableStateOf("") }
         var passwordVisible by remember { mutableStateOf(false) }
-        var showError by remember { mutableStateOf(false) }
+        var isLoading by remember { mutableStateOf(false) }
+        var errorMessage by remember { mutableStateOf<String?>(null) }
+
+        if (viewModel.authenticated.value) {
+            LaunchedEffect(Unit) {
+                delay(100)
+                navController.navigate("dashboard") {
+                    popUpTo("signup") { inclusive = true }
+                }
+            }
+        }
 
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -41,7 +54,7 @@ fun SignupScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp)
                     .shadow(10.dp, RoundedCornerShape(24.dp))
-                    .background(White.copy(alpha = 0.9f), RoundedCornerShape(24.dp))
+                    .background(White.copy(alpha = 0.95f), RoundedCornerShape(24.dp))
                     .padding(24.dp)
             ) {
                 Text(
@@ -103,8 +116,8 @@ fun SignupScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                if (showError) {
-                    Text("Passwords do not match", color = VeryUnhealthyRed)
+                AnimatedVisibility(errorMessage != null) {
+                    Text(errorMessage ?: "", color = VeryUnhealthyRed)
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -112,8 +125,18 @@ fun SignupScreen(
                 Button(
                     onClick = {
                         if (password == confirm && email.isNotBlank()) {
-                            onSignupClick(email, password)
-                        } else showError = true
+                            isLoading = true
+                            viewModel.signup(email, password) { success, msg ->
+                                isLoading = false
+                                if (success) {
+                                    navController.navigate("dashboard") {
+                                        popUpTo("signup") { inclusive = true }
+                                    }
+                                } else {
+                                    errorMessage = msg ?: "Signup failed. Try again."
+                                }
+                            }
+                        } else errorMessage = "Passwords do not match."
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = AquaTeal),
                     shape = RoundedCornerShape(20.dp),
@@ -121,7 +144,10 @@ fun SignupScreen(
                         .fillMaxWidth()
                         .height(50.dp)
                 ) {
-                    Text("Sign Up", color = White)
+                    if (isLoading)
+                        CircularProgressIndicator(color = White, strokeWidth = 2.dp)
+                    else
+                        Text("Sign Up", color = White)
                 }
 
                 Spacer(modifier = Modifier.height(12.dp))
