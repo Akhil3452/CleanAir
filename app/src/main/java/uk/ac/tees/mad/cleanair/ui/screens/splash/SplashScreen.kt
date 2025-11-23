@@ -19,15 +19,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 import uk.ac.tees.mad.cleanair.ui.theme.DeepSky
 import uk.ac.tees.mad.cleanair.ui.theme.LightSky
 import uk.ac.tees.mad.cleanair.R
+import uk.ac.tees.mad.cleanair.ui.screens.auth.AuthViewModel
 
 
 @Composable
-fun SplashScreen(navController: NavController, onTimeoutRoute: String = "login") {
+fun SplashScreen(
+    navController: NavController,
+    onTimeoutRoute: String = "login",
+    viewModel: AuthViewModel = hiltViewModel()
+) {
+
     val infinite = rememberInfiniteTransition()
     val cloudOffset1 = infinite.animateFloat(
         initialValue = -120f,
@@ -47,14 +54,27 @@ fun SplashScreen(navController: NavController, onTimeoutRoute: String = "login")
     )
 
     var startAnim by remember { mutableStateOf(false) }
-    val scale by animateFloatAsState(targetValue = if (startAnim) 1f else 0.85f, animationSpec = tween(800))
-    val alpha by animateFloatAsState(targetValue = if (startAnim) 1f else 0f, animationSpec = tween(900))
+    val scale by animateFloatAsState(
+        targetValue = if (startAnim) 1f else 0.85f,
+        animationSpec = tween(800)
+    )
+    val alpha by animateFloatAsState(
+        targetValue = if (startAnim) 1f else 0f,
+        animationSpec = tween(900)
+    )
+    val authetication = viewModel.authenticated.value
 
     LaunchedEffect(Unit) {
         startAnim = true
         delay(2000)
-        navController.navigate(onTimeoutRoute) {
-            popUpTo("splash") { inclusive = true }
+        if (authetication) {
+            navController.navigate("dashboard") {
+                popUpTo("splash") { inclusive = true }
+            }
+        } else {
+            navController.navigate(onTimeoutRoute) {
+                popUpTo("splash") { inclusive = true }
+            }
         }
     }
 

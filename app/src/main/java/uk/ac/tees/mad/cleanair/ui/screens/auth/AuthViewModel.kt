@@ -20,7 +20,7 @@ class AuthViewModel @Inject constructor(
     fun signup(email: String, password: String, onResult: (Boolean, String?) -> Unit) {
         viewModelScope.launch {
             auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener {
+                .addOnSuccessListener {
                     firestore.collection("users").document(auth.currentUser?.uid ?: "").set(
                         hashMapOf(
                             "profile" to null,
@@ -28,9 +28,9 @@ class AuthViewModel @Inject constructor(
                             "email" to email,
                             "password" to password
                         )
-                    ).addOnCompleteListener {
+                    ).addOnSuccessListener {
                         authenticated.value = true
-                        onResult(it.isSuccessful, it.exception?.message)
+                        onResult(true, null)
                     }.addOnFailureListener {
                         onResult(false, it.message)
                     }
@@ -43,9 +43,9 @@ class AuthViewModel @Inject constructor(
     fun login(email: String, password: String, onResult: (Boolean, String?) -> Unit) {
         viewModelScope.launch {
             auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener {
+                .addOnSuccessListener {
                     authenticated.value = true
-                    onResult(it.isSuccessful, it.exception?.message)
+                    onResult(true, null)
                 }
                 .addOnFailureListener {
                     onResult(false, it.message)

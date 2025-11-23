@@ -33,18 +33,17 @@ fun LoginScreen(
         var password by remember { mutableStateOf("") }
         var passwordVisible by remember { mutableStateOf(false) }
         var isLoading by remember { mutableStateOf(false) }
-        var showError by remember { mutableStateOf(false) }
         var errorMessage by remember { mutableStateOf<String?>(null) }
+        val authenticated = viewModel.authenticated.value
 
-
-        if (viewModel.authenticated.value) {
-            LaunchedEffect(Unit) {
-                delay(100)
-                navController.navigate("dashboard") {
-                    popUpTo("login") { inclusive = true }
+            LaunchedEffect(authenticated) {
+                if (authenticated) {
+                    delay(100)
+                    navController.navigate("dashboard") {
+                        popUpTo("login") { inclusive = true }
+                    }
                 }
             }
-        }
 
         Box(
             modifier = Modifier.fillMaxSize(),
