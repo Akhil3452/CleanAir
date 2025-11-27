@@ -31,10 +31,15 @@ import uk.ac.tees.mad.cleanair.ui.theme.*
 @Composable
 fun DashboardScreen(navController: NavController) {
     val dummyCity = "London"
-    val dummyAQI = 47
+    val dummyAQI = 70
     val dummyTemp = 23
     val dummyHumidity = 54
-    val dummyStatus = "Good Air Quality 🌤️"
+    val dummyStatus = when (dummyAQI) {
+        in 0..50 -> "Good Air Quality 🌤️"
+        in 51.. 100 -> "Moderate Air Quality 🌧️"
+        else -> "Unhealthy Air Quality 🌧️"
+    }
+
 
     var greeting by remember { mutableStateOf("Good Morning ☀️") }
 
@@ -66,7 +71,6 @@ fun DashboardScreen(navController: NavController) {
             modifier = Modifier.fillMaxSize().systemBarsPadding(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            // Header
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
@@ -87,7 +91,6 @@ fun DashboardScreen(navController: NavController) {
                 }
 
                 IconButton(onClick = {
-                    // logout
                     navController.navigate("login") {
                         popUpTo("dashboard") { inclusive = true }
                     }
@@ -98,7 +101,6 @@ fun DashboardScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Location Card
             Card(
                 colors = CardDefaults.cardColors(containerColor = Color.White.copy(alpha = 0.2f)),
                 shape = RoundedCornerShape(20.dp),
@@ -116,7 +118,6 @@ fun DashboardScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // AQI Main Card
             Card(
                 shape = RoundedCornerShape(30.dp),
                 modifier = Modifier
@@ -150,7 +151,6 @@ fun DashboardScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Info Cards Row
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(16.dp),
                 modifier = Modifier.fillMaxWidth()
@@ -168,7 +168,6 @@ fun DashboardScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Motivational Quote
             AnimatedVisibility(true) {
                 Text(
                     text = "\"Clean Air, Clear Mind. Keep Breathing Fresh!\" 🌱",
