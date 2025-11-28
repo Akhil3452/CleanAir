@@ -1,5 +1,8 @@
 package uk.ac.tees.mad.cleanair.ui.screens.dashboard
 
+import android.Manifest
+import android.location.LocationProvider
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -21,13 +24,19 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.tasks.await
 import uk.ac.tees.mad.cleanair.ui.theme.*
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun DashboardScreen(navController: NavController) {
     val dummyCity = "London"
@@ -38,6 +47,33 @@ fun DashboardScreen(navController: NavController) {
         in 0..50 -> "Good Air Quality 🌤️"
         in 51.. 100 -> "Moderate Air Quality 🌧️"
         else -> "Unhealthy Air Quality 🌧️"
+    }
+    val context = LocalContext.current
+    var userLat by remember { mutableStateOf<Double?>(null) }
+    var userLon by remember { mutableStateOf<Double?>(null) }
+    val fusedLocationClient = remember { LocationServices.getFusedLocationProviderClient(context) }
+    val locationPermissionState  = rememberMultiplePermissionsState(
+        permissions = listOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+    )
+    LaunchedEffect(Unit) {
+        locationPermissionState.launchMultiplePermissionRequest()
+    }
+
+    LaunchedEffect(locationPermissionState.allPermissionsGranted) {
+        if (locationPermissionState.allPermissionsGranted) {
+            try {
+                val location = fusedLocationClient.lastLocation.await()
+                location?.let {
+                    userLat = it.latitude
+                    userLon = it.longitude
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
 
@@ -88,6 +124,7 @@ fun DashboardScreen(navController: NavController) {
                         color = Color.White.copy(alpha = 0.9f),
                         fontSize = 16.sp
                     )
+                    Text("${userLat},${userLon}")
                 }
 
                 IconButton(onClick = {
