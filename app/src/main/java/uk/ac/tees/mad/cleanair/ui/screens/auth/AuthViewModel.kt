@@ -8,23 +8,23 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import uk.ac.tees.mad.cleanair.data.remote.GeoLocationApi
+import uk.ac.tees.mad.cleanair.data.remote.AqiApi
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
-    private val geoLocationApi: GeoLocationApi
+    private val aqiApi: AqiApi
 ) : ViewModel() {
 
     init {
         viewModelScope.launch {
             try {
-                val geoData = geoLocationApi.getDetails()
-                Log.d("GeoLocation", "City: ${geoData.city}")
+                val geoData = aqiApi.getDetails(25.4269495, 83.074516)
+                Log.d("GeoLocation", "City: $geoData.")
             } catch (e: Exception) {
-                Log.e("GeoLocation", "Error fetching data: ${e.localizedMessage}")
+                Log.e("GeoLocation", "Error fetching data: ${e.message}")
             }
         }
     }
