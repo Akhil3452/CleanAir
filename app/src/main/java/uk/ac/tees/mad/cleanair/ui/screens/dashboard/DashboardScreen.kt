@@ -44,8 +44,11 @@ fun DashboardScreen(navController: NavController,
 ) {
     val dummyCity = "London"
     val dummyAQI = viewModel.aqi.collectAsState().value
-    val dummyTemp = 23
-    val dummyHumidity = 54
+    val forecast = viewModel.forecast.collectAsState().value
+    val dummyTemp = forecast?.hourly?.temperature_2m?.first() ?:0
+    val dummyHumidity = forecast?.hourly?.relative_humidity_2m?.first() ?:0
+    val dummyWind = forecast?.hourly?.wind_speed_10m?.first() ?:0
+
     val dummyStatus = when (dummyAQI) {
         in 0..50 -> "Good Air Quality 🌤️"
         in 51.. 100 -> "Moderate Air Quality 🌧️"
@@ -73,6 +76,7 @@ fun DashboardScreen(navController: NavController,
                     userLat = it.latitude
                     userLon = it.longitude
                     viewModel.fetchAqi( it.latitude, it.longitude)
+                    viewModel.fetchForecast(it.latitude, it.longitude)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -206,7 +210,7 @@ fun DashboardScreen(navController: NavController,
                     InfoCard(title = "Humidity", value = "$dummyHumidity%", color = Color(0xFF81D4FA))
                 }
                 item {
-                    InfoCard(title = "Wind", value = "6.2 km/h", color = Color(0xFF80CBC4))
+                    InfoCard(title = "Wind", value = dummyWind.toString(), color = Color(0xFF80CBC4))
                 }
             }
 
