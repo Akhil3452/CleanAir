@@ -28,6 +28,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
@@ -38,9 +39,11 @@ import uk.ac.tees.mad.cleanair.ui.theme.*
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun DashboardScreen(navController: NavController) {
+fun DashboardScreen(navController: NavController,
+                    viewModel : DashboardViewModel = hiltViewModel()
+) {
     val dummyCity = "London"
-    val dummyAQI = 70
+    val dummyAQI = viewModel.aqi.collectAsState().value
     val dummyTemp = 23
     val dummyHumidity = 54
     val dummyStatus = when (dummyAQI) {
@@ -69,6 +72,7 @@ fun DashboardScreen(navController: NavController) {
                 location?.let {
                     userLat = it.latitude
                     userLon = it.longitude
+                    viewModel.fetchAqi( it.latitude, it.longitude)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -124,7 +128,6 @@ fun DashboardScreen(navController: NavController) {
                         color = Color.White.copy(alpha = 0.9f),
                         fontSize = 16.sp
                     )
-                    Text("${userLat},${userLon}")
                 }
 
                 IconButton(onClick = {
@@ -174,12 +177,16 @@ fun DashboardScreen(navController: NavController) {
                         color = Neutral700
                     )
                     Spacer(modifier = Modifier.height(12.dp))
-                    AQIGauge(dummyAQI)
+                    if (dummyAQI != null) {
+                        AQIGauge(dummyAQI)
+                    }else{
+                        Text("No Data Available")
+                    }
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
                         text = dummyStatus,
-                        color = if (dummyAQI <= 50) Color(0xFF00C853)
-                        else if (dummyAQI <= 100) Color(0xFFFFC107)
+                        color = if ((dummyAQI ?: 0) <= 50) Color(0xFF00C853)
+                        else if ((dummyAQI ?: 0) <= 100) Color(0xFFFFC107)
                         else Color(0xFFD32F2F),
                         fontWeight = FontWeight.Bold
                     )

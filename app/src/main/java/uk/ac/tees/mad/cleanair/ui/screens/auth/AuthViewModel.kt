@@ -15,19 +15,8 @@ import javax.inject.Inject
 class AuthViewModel @Inject constructor(
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
-    private val aqiApi: AqiApi
 ) : ViewModel() {
 
-    init {
-        viewModelScope.launch {
-            try {
-                val geoData = aqiApi.getDetails(25.4269495, 83.074516)
-                Log.d("GeoLocation", "City: $geoData.")
-            } catch (e: Exception) {
-                Log.e("GeoLocation", "Error fetching data: ${e.message}")
-            }
-        }
-    }
     val authenticated = mutableStateOf(auth.currentUser != null)
 
     fun signup(email: String, password: String, onResult: (Boolean, String?) -> Unit) {
