@@ -6,13 +6,16 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
 import uk.ac.tees.mad.cleanair.ui.screens.auth.LoginScreen
 import uk.ac.tees.mad.cleanair.ui.screens.auth.SignupScreen
 import uk.ac.tees.mad.cleanair.ui.screens.dashboard.DashboardScreen
+import uk.ac.tees.mad.cleanair.ui.screens.healthtips.HealthTipsScreen
 import uk.ac.tees.mad.cleanair.ui.screens.splash.SplashScreen
 import uk.ac.tees.mad.cleanair.ui.theme.CleanAirTheme
 
@@ -36,6 +39,12 @@ fun AppNavGraph(navController: NavHostController = rememberNavController()) {
         composable("login") { LoginScreen(navController = navController) }
         composable("signup") { SignupScreen(navController = navController) }
         composable("dashboard") { DashboardScreen(navController = navController) }
-        // other routes...
+        composable(
+            route = "healthTips/{aqi}",
+            arguments = listOf(navArgument("aqi") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val aqi = backStackEntry.arguments?.getInt("aqi") ?: 0
+            HealthTipsScreen(navController = navController, aqi = aqi)
+        }
     }
 }

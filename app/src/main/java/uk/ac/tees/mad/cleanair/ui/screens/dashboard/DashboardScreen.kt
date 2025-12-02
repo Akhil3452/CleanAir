@@ -236,7 +236,7 @@ fun DashboardScreen(
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    QuickNavButton("Health Tips", SkyBlue) { navController.navigate("healthTips") }
+                    QuickNavButton("Health Tips", SkyBlue) { navController.navigate("healthTips/${aqi ?: 0}")}
                     QuickNavButton("Log Symptoms", AquaTeal) { navController.navigate("logSymptoms") }
                     QuickNavButton("Profile", DeepSky) { navController.navigate("profile") }
                 }
