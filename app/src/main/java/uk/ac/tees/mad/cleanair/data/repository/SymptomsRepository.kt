@@ -6,7 +6,8 @@ import uk.ac.tees.mad.cleanair.data.local.SymptomDao
 import uk.ac.tees.mad.cleanair.data.local.SymptomEntity
 import javax.inject.Inject
 
-class SymptomsRepository @Inject constructor(
+class
+SymptomsRepository @Inject constructor(
     private val dao: SymptomDao,
     private val firestore: FirebaseFirestore
 ) {

@@ -17,6 +17,7 @@ import uk.ac.tees.mad.cleanair.ui.screens.auth.SignupScreen
 import uk.ac.tees.mad.cleanair.ui.screens.dashboard.DashboardScreen
 import uk.ac.tees.mad.cleanair.ui.screens.healthtips.HealthTipsScreen
 import uk.ac.tees.mad.cleanair.ui.screens.splash.SplashScreen
+import uk.ac.tees.mad.cleanair.ui.screens.symptoms.LogSymptomsScreen
 import uk.ac.tees.mad.cleanair.ui.theme.CleanAirTheme
 
 @AndroidEntryPoint
@@ -46,5 +47,6 @@ fun AppNavGraph(navController: NavHostController = rememberNavController()) {
             val aqi = backStackEntry.arguments?.getInt("aqi") ?: 0
             HealthTipsScreen(navController = navController, aqi = aqi)
         }
+        composable("logSymptoms") { LogSymptomsScreen() }
     }
 }
