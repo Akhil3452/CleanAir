@@ -1,6 +1,7 @@
 package uk.ac.tees.mad.cleanair.ui.screens.symptoms
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,12 +19,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import uk.ac.tees.mad.cleanair.data.local.SymptomEntity
 import uk.ac.tees.mad.cleanair.ui.theme.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LogSymptomsScreen(viewModel: SymptomsViewModel = hiltViewModel()) {
+fun LogSymptomsScreen(viewModel: SymptomsViewModel = hiltViewModel(), navController: NavController) {
     val symptoms = viewModel.symptoms.collectAsState().value
 
     var symptomText by remember { mutableStateOf("") }
@@ -34,7 +36,7 @@ fun LogSymptomsScreen(viewModel: SymptomsViewModel = hiltViewModel()) {
         topBar = {
             TopAppBar(
                 title = { Text("Log Symptoms", color = White, fontWeight = FontWeight.Bold) },
-                navigationIcon = {Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null, tint = Color.White)},
+                navigationIcon = {Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null, tint = Color.White, modifier = Modifier.clickable { navController.popBackStack() })},
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = DeepSky)
             )
         },

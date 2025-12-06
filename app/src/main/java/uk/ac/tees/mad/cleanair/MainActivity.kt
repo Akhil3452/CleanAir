@@ -12,6 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dagger.hilt.android.AndroidEntryPoint
+import uk.ac.tees.mad.cleanair.ui.screens.profile.ProfileScreen
 import uk.ac.tees.mad.cleanair.ui.screens.auth.LoginScreen
 import uk.ac.tees.mad.cleanair.ui.screens.auth.SignupScreen
 import uk.ac.tees.mad.cleanair.ui.screens.dashboard.DashboardScreen
@@ -47,6 +48,11 @@ fun AppNavGraph(navController: NavHostController = rememberNavController()) {
             val aqi = backStackEntry.arguments?.getInt("aqi") ?: 0
             HealthTipsScreen(navController = navController, aqi = aqi)
         }
-        composable("logSymptoms") { LogSymptomsScreen() }
+        composable("logSymptoms") { LogSymptomsScreen(navController = navController) }
+        composable("profile") { ProfileScreen(onLogout = {
+            navController.navigate("login"){
+                popUpTo(0)
+            }
+        }) }
     }
 }
