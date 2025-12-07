@@ -38,6 +38,10 @@ val ModerateYellow = Color(0xFFF1C40F)
 val UnhealthyOrange = Color(0xFFF39C12)
 val VeryUnhealthyRed = Color(0xFFEA4335)
 val HazardPurple = Color(0xFF7C3AED)
+val CleanBlue = Color(0xFF4F8EF7)
+val CleanGreen = Color(0xFF66CDAA)
+val CleanGray = Color(0xFFF2F4F7)
+val CleanDark = Color(0xFF1E293B)
 
 val BookmarkAccent = Color(0xFFFFA726)
 
