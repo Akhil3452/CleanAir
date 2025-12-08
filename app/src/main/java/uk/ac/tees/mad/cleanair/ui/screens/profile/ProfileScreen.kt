@@ -86,7 +86,6 @@ fun ProfileScreen(
             modifier = Modifier
                 .verticalScroll(rememberScrollState())
         ) {
-            // 🌤️ Gradient Header
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -139,7 +138,6 @@ fun ProfileScreen(
                 }
             }
 
-            // ✏️ Editable Name Card
             Card(
                 modifier = Modifier
                     .padding(20.dp)
@@ -172,7 +170,6 @@ fun ProfileScreen(
                 }
             }
 
-            // 📸 Camera & Gallery Buttons
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -196,7 +193,6 @@ fun ProfileScreen(
 
             Spacer(Modifier.height(40.dp))
 
-            // 🌬️ Quote Card
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -219,7 +215,6 @@ fun ProfileScreen(
 
             Spacer(Modifier.height(40.dp))
 
-            // 🚪 Logout Button
             Button(
                 onClick = {
                     viewModel.logout()
@@ -236,7 +231,6 @@ fun ProfileScreen(
             Spacer(Modifier.height(60.dp))
         }
 
-        // 🔄 Loading Overlay
         AnimatedVisibility(
             visible = loading,
             enter = fadeIn(),

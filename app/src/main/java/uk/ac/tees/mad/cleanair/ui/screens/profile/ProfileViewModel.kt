@@ -24,6 +24,9 @@ class ProfileViewModel @Inject constructor(
         loadProfile()
     }
 
+    val cloudinaryConfig = CloudinaryConfig(
+
+
     private fun loadProfile() {
         val uid = auth.currentUser?.uid ?: return
         firestore.collection("users").document(uid).get()
