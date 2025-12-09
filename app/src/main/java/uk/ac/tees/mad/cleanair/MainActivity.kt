@@ -20,12 +20,14 @@ import uk.ac.tees.mad.cleanair.ui.screens.healthtips.HealthTipsScreen
 import uk.ac.tees.mad.cleanair.ui.screens.splash.SplashScreen
 import uk.ac.tees.mad.cleanair.ui.screens.symptoms.LogSymptomsScreen
 import uk.ac.tees.mad.cleanair.ui.theme.CleanAirTheme
+import uk.ac.tees.mad.cleanair.util.CloudinaryInstance
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        CloudinaryInstance.init(this)
         setContent {
             CleanAirTheme {
                 AppNavGraph()

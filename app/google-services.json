@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "834997247165",
-    "project_id": "cleanair-ce85a",
-    "storage_bucket": "cleanair-ce85a.firebasestorage.app"
+    "project_number": "472608564338",
+    "project_id": "cleanair-5dec9",
+    "storage_bucket": "cleanair-5dec9.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:834997247165:android:fb97be3026ef343057ebd4",
+        "mobilesdk_app_id": "1:472608564338:android:1bda2ce6dfd048a69a4eeb",
         "android_client_info": {
           "package_name": "uk.ac.tees.mad.cleanair"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCFsZ7__aXapde1FnZvRqLA8eceQggTkzA"
+          "current_key": "AIzaSyCHHu7vZZDLA0t75EYLKMT7zVX57zw9K4w"
         }
       ],
       "services": {

@@ -38,7 +38,6 @@ import uk.ac.tees.mad.cleanair.ui.theme.CleanDark
 import java.io.File
 import java.io.FileOutputStream
 
-
 fun Bitmap.toTempUri(context: Context): Uri {
     val file = File(context.cacheDir, "temp_profile.jpg")
     FileOutputStream(file).use { out -> this.compress(Bitmap.CompressFormat.JPEG, 100, out) }
@@ -60,9 +59,9 @@ fun ProfileScreen(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let {
-//            viewModel.uploadProfile(context, it) { success, msg ->
-//                if (!success) println("Upload failed: $msg")
-//            }
+            viewModel.uploadProfile(context, it) { success, msg ->
+                if (!success) println("Upload failed: $msg")
+            }
         }
     }
 
@@ -71,9 +70,9 @@ fun ProfileScreen(
     ) { bitmap ->
         bitmap?.let {
             val uri = it.toTempUri(context)
-//            viewModel.uploadProfile(context, uri) { success, msg ->
-//                if (!success) println("Upload failed: $msg")
-//            }
+            viewModel.uploadProfile(context, uri) { success, msg ->
+                if (!success) println("Upload failed: $msg")
+            }
         }
     }
 
@@ -83,8 +82,7 @@ fun ProfileScreen(
             .background(CleanGray)
     ) {
         Column(
-            modifier = Modifier
-                .verticalScroll(rememberScrollState())
+            modifier = Modifier.verticalScroll(rememberScrollState())
         ) {
             Box(
                 modifier = Modifier
